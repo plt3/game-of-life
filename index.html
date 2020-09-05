@@ -6,29 +6,12 @@
     <title>Conway's Game of Life</title>
   </head>
   <body>
-    <table>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
-  <script src="scripts.js"></script>
+    <div class="container">
+      <h2>Welcome to Conway's Game of Life!</h2>
+      <label for="gridNum">Enter a grid size: </label>
+      <input type="number" name="gridNum" id="gridNum" value="20">
+      <button type="submit" onclick="gameSetup()">Submit</button>
+    </div>
+    <script src="scripts.js"></script>
   </body>
 </html>
