@@ -1,9 +1,13 @@
 const WINDOW_DIM = Math.floor(window.innerHeight * .97);
+const CYCLE_INTERVAL = 100;
 const GRID_DIV = document.getElementsByClassName('gridContainer')[0];
 const BUTTON_OUTER_DIV = document.getElementsByClassName('buttonContainer')[0];
 const BUTTON_DIV = document.getElementsByClassName('subButtonContainer')[0];
 const EMPTY_BACKGROUND = 'white';
 const FULL_BACKGROUND = 'black';
+let amountCycles = 0;
+let gameLoop;
+let running = false;
 
 function clearChildren(node) {
   // remove all child nodes of container div to make space for grid
@@ -12,13 +16,17 @@ function clearChildren(node) {
   }
 }
 
-function changeBackground() {
-  // for when user clicks a grid cell to set game up
-  if (event.target.style.backgroundColor === EMPTY_BACKGROUND) {
-    event.target.style.backgroundColor = FULL_BACKGROUND;
+function changeBackground(node) {
+  if (node.style.backgroundColor === EMPTY_BACKGROUND) {
+    node.style.backgroundColor = FULL_BACKGROUND;
   } else {
-    event.target.style.backgroundColor = EMPTY_BACKGROUND;
+    node.style.backgroundColor = EMPTY_BACKGROUND;
   }
+}
+
+function changeBackgroundWrapper() {
+  // workaround for event handlers not accepting arguments
+  changeBackground(event.target);
 }
 
 function createGrid(rowNum) {
@@ -38,7 +46,7 @@ function createGrid(rowNum) {
       let datum = document.createElement('td');
       datum.style.backgroundColor = EMPTY_BACKGROUND;
       datum.id = `${i},${j}`;
-      datum.onclick = changeBackground;
+      datum.onclick = changeBackgroundWrapper;
       row.appendChild(datum);
     }
     table.appendChild(row);
@@ -50,19 +58,34 @@ function createGrid(rowNum) {
 }
 
 function createButtons() {
-  // set up game setup instructions and start game button
+  // set up game instructions and start game button
   BUTTON_OUTER_DIV.style.height = WINDOW_DIM + 'px';
 
   const instructionsText = document.createElement('p');
   const startButton = document.createElement('button');
-  instructionsText.innerHTML = 'Click anywhere in the grid to place as many\
-<br>starting cells as you\'d like, then press "Start game!"';
-  startButton.innerHTML = 'Start game!';
   startButton.id = 'start';
-  startButton.onclick = startGame;
 
   BUTTON_DIV.appendChild(instructionsText);
   BUTTON_DIV.appendChild(startButton);
+  changeButtons();
+}
+
+function changeButtons() {
+  const instructions = BUTTON_DIV.childNodes[0];
+  const stopButton = BUTTON_DIV.childNodes[1];
+
+  if (running) {
+    instructions.innerHTML = 'Press "Stop game" to end the simulation';
+    stopButton.innerHTML = 'Stop game';
+    stopButton.onclick = stopGame;
+    running = false;
+  } else {
+    instructions.innerHTML = 'Click anywhere in the grid to place as many\
+<br>starting cells as you\'d like, then press "Start game!"';
+    stopButton.innerHTML = 'Start game!';
+    stopButton.onclick = startGame;
+    running = true;
+  }
 }
 
 function getNeighborNodes(node) {
@@ -101,22 +124,32 @@ function runGame(table) {
     }
   }
 
-  for (let node of nodesToChange) {  // ugh can I not make this a function
-    if (node.style.backgroundColor === EMPTY_BACKGROUND) {
-      node.style.backgroundColor = FULL_BACKGROUND;
-    } else {
-      node.style.backgroundColor = EMPTY_BACKGROUND;
-    }
+  for (let oldNode of nodesToChange) {
+    changeBackground(oldNode);
+  }
+
+  if (nodesToChange.length === 0) {
+    stopGame();
+  }
+
+  amountCycles += 1;
+}
+
+function stopGame() {
+  clearInterval(gameLoop);
+  changeButtons();
+  if (amountCycles !== 1) {
+    alert(`Your pattern made it through ${amountCycles} cycles!`);
+  } else {
+    alert(`Your pattern made it through ${amountCycles} cycle!`);
   }
 }
 
 function startGame() {
-  const instructions = BUTTON_DIV.childNodes[0];
-  const stopButton = BUTTON_DIV.childNodes[1];
-  instructions.innerHTML = 'Press "Stop game" to end the simulation';
-  stopButton.innerHTML = 'Stop game';
+  amountCycles = 0;
+  changeButtons();
   const tableElem = document.getElementsByTagName('table')[0];
-  setInterval(runGame, 250, tableElem);
+  gameLoop = setInterval(runGame, CYCLE_INTERVAL, tableElem);
 }
 
 function gameSetup() {
