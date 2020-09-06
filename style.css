@@ -1,9 +1,18 @@
+body {
+  background-color: #89cff0;
+}
+
 .container {
   display: flex;
 }
 
 .gridContainer {
   flex: 1;
+  text-align: center;
+}
+
+.gridContainer h1 {
+  padding: 20px;
 }
 
 .buttonContainer {
@@ -13,7 +22,15 @@
   justify-content: center;
 }
 
-.buttonContainer button {
+.subButtonContainer {
+  text-align: center;
+}
+
+.subButtonContainer button {
+  font-size: 20px;
+  padding: 10px;
+}
+.subButtonContainer p {
   font-size: 20px;
   padding: 10px;
 }

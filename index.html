@@ -8,12 +8,15 @@
   <body>
     <div class="container">
       <div class="gridContainer">
-        <h2>Welcome to Conway's Game of Life!</h2>
+        <h1>Welcome to Conway's Game of Life!</h1>
         <label for="gridNum">Enter a grid size: </label>
         <input type="number" name="gridNum" id="gridNum" value="20">
         <button type="submit" onclick="gameSetup()">Submit</button>
+        <p>(Clicking submit will make an n x n grid of the selected size)</p>
       </div>
-      <div class="buttonContainer"></div>
+      <div class="buttonContainer">
+        <div class="subButtonContainer"></div>
+      </div>
     </div>
     <script src="scripts.js"></script>
   </body>
