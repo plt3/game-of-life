@@ -1,7 +1,19 @@
-table {
-  background-color: black;
+.container {
+  display: flex;
 }
 
-td {
-  background-color: white;
+.gridContainer {
+  flex: 1;
+}
+
+.buttonContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buttonContainer button {
+  font-size: 20px;
+  padding: 10px;
 }
