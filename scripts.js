@@ -1,5 +1,5 @@
 const WINDOW_DIM = Math.floor(window.innerHeight * .97);
-const CYCLE_INTERVAL = 100;
+let CYCLE_INTERVAL = 100;
 const GRID_DIV = document.getElementsByClassName('gridContainer')[0];
 const RIGHT_DIV = document.getElementsByClassName('rightContainer')[0];
 const BUTTON_OUTER_DIV = document.getElementsByClassName('buttonContainer')[0];
@@ -25,14 +25,21 @@ function changeBackgroundWrapper() {
   changeBackground(event.target);
 }
 
-function createGrid(rowNum=20) {
+function createGrid(rowNum=20, first=true) {
   /*
   Make rowNum x rowNum grid that is adapted to the size of the browser window
   Also give each cell an id saying its row and column numbers
   */
-  const SQUARE_DIM = Math.floor(WINDOW_DIM / rowNum);
-  const table = document.createElement('table');
-  table.style.backgroundColor = FULL_BACKGROUND;
+  let table;
+  if (first) {
+    table = document.createElement('table');
+    table.style.backgroundColor = FULL_BACKGROUND;
+  } else {
+    table = document.getElementsByTagName('table')[0];
+    while (table.hasChildNodes()) {
+      table.removeChild(table.firstChild);
+    }
+  }
 
   for (let i = 0; i < rowNum; i++) {
     let row = document.createElement('tr');
@@ -50,7 +57,9 @@ function createGrid(rowNum=20) {
   table.style.height = WINDOW_DIM + 'px';
   table.style.width = WINDOW_DIM + 'px';
 
-  GRID_DIV.appendChild(table);
+  if (first) {
+    GRID_DIV.appendChild(table);
+  }
 }
 
 function clearGrid() {
@@ -139,6 +148,7 @@ function runGame(table) {
 function stopGame() {
   clearInterval(gameLoop);
   changeButtons();
+  disableButtons();
   if (amountCycles !== 1) {
     alert(`Your pattern made it through ${amountCycles} cycles!`);
   } else {
@@ -146,11 +156,33 @@ function stopGame() {
   }
 }
 
+function disableButtons() {
+  const settingChoices = document.getElementsByClassName('settingChoices')[0];
+  for (node of settingChoices.childNodes) {
+    if (node.tagName === 'INPUT' || node.tagName === 'SELECT') {
+      if (running) {
+        node.disabled = 'readonly';
+      } else {
+        node.disabled = '';
+      }
+    }
+  }
+}
+
 function startGame() {
   amountCycles = 0;
   changeButtons();
+  disableButtons();
   const tableElem = document.getElementsByTagName('table')[0];
   gameLoop = setInterval(runGame, CYCLE_INTERVAL, tableElem);
+}
+
+function changeSpeed() {
+  CYCLE_INTERVAL = event.target.value * 1000;
+}
+
+function changeGrid() {
+  createGrid(event.target.value, false);
 }
 
 function gameSetup() {

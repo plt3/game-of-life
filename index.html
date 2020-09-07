@@ -18,23 +18,21 @@
             <h2>Settings:</h2>
             <div class="settingChoices">
               <label for="gridNum">Grid size: </label>
-              <input type="number" name="gridNum" id="gridNum" value="20">
+              <input type="number" name="gridNum" id="gridNum" value="20" onchange="changeGrid()">
               <br>
               <label for="speed">Cycle interval (seconds): </label>
-              <input type="number" name="speed" id="speed" value="0.1" step="0.1" min="0.1">
+              <input type="number" name="speed" id="speed" value="0.1" step="0.1" min="0.1" onchange="changeSpeed()">
               <br>
               <label for="color">Background color: </label>
-              <select name="color">
+              <select name="color" id="colorTheme">
                 <option value="">color1</option>
                 <option value="">color2</option>
                 <option value="">color3</option>
                 <option value="">color4</option>
               </select>
-            </div>
-            <br>
-            <div class="settingButtons">
+              <br>
+              <br>
               <button type="button" name="clear" onclick="clearGrid()">Clear grid</button>
-              <button type="submit" onclick="gameSetup()">Submit changes</button>
             </div>
           </div>
         </div>
