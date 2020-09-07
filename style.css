@@ -2,35 +2,48 @@ body {
   background-color: #89cff0;
 }
 
+#title {
+  padding: 20px;
+  font-size: 37px;
+}
+
 .container {
   display: flex;
 }
 
 .gridContainer {
   flex: 1;
-  text-align: center;
 }
 
-.gridContainer h1 {
-  padding: 20px;
-}
-
-.buttonContainer {
+.rightContainer {
   flex: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
-.subButtonContainer {
+.buttonContainer {
   text-align: center;
 }
 
-.subButtonContainer button {
+.settings {
+  text-align: center;
+}
+
+.settings input {
+  width: 60px;
+}
+
+.settings button {
+  font-size: 15px;
+  padding: 5px;
+}
+
+.playGame > button {
   font-size: 20px;
   padding: 10px;
 }
-.subButtonContainer p {
-  font-size: 20px;
-  padding: 10px;
+
+.settingChoices {
+  text-align: right;
+  padding-right: 80px;
 }

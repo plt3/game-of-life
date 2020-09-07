@@ -1,20 +1,21 @@
 const WINDOW_DIM = Math.floor(window.innerHeight * .97);
 const CYCLE_INTERVAL = 100;
 const GRID_DIV = document.getElementsByClassName('gridContainer')[0];
+const RIGHT_DIV = document.getElementsByClassName('rightContainer')[0];
 const BUTTON_OUTER_DIV = document.getElementsByClassName('buttonContainer')[0];
-const BUTTON_DIV = document.getElementsByClassName('subButtonContainer')[0];
+const TITLE_ELEM = document.getElementById('title');
 const EMPTY_BACKGROUND = 'white';
 const FULL_BACKGROUND = 'black';
 let amountCycles = 0;
 let gameLoop;
 let running = false;
 
-function clearChildren(node) {
-  // remove all child nodes of container div to make space for grid
-  while (node.hasChildNodes()) {
-    node.removeChild(node.firstChild);
-  }
-}
+// function clearChildren(node) {
+//   // remove all child nodes of container div to make space for grid
+//   while (node.hasChildNodes()) {
+//     node.removeChild(node.firstChild);
+//   }
+// }
 
 function changeBackground(node) {
   if (node.style.backgroundColor === EMPTY_BACKGROUND) {
@@ -29,7 +30,7 @@ function changeBackgroundWrapper() {
   changeBackground(event.target);
 }
 
-function createGrid(rowNum) {
+function createGrid(rowNum=20) {
   /*
   Make rowNum x rowNum grid that is adapted to the size of the browser window
   Also give each cell an id saying its row and column numbers
@@ -153,8 +154,20 @@ function startGame() {
 }
 
 function gameSetup() {
-  const rows = parseInt(document.getElementsByTagName('input')[0].value);
-  clearChildren(GRID_DIV);
-  createGrid(rows);
-  createButtons();
+  createGrid();
+  BUTTON_OUTER_DIV.style.width = TITLE_ELEM.offsetWidth + 'px';
+  const instructionsElem = document.createElement('h3');
+  instructionsElem.innerHTML = 'Click on any boxes in the grid to make a starting pattern, then click "Start game!"';
+  const playDiv = document.getElementsByClassName('playGame')[0];
+  const settingsDiv = document.getElementsByClassName('settings')[0];
+  playDiv.insertBefore(instructionsElem, playDiv.firstChild);
+  const toPad = RIGHT_DIV.offsetHeight - TITLE_ELEM.offsetHeight - playDiv.offsetHeight - settingsDiv.offsetHeight - 3 * 29;
+  playDiv.style.paddingTop = Math.floor(toPad / 2) + 'px';
+  playDiv.style.paddingBottom = Math.floor(toPad / 2) + 'px';
+  // const rows = parseInt(document.getElementsByTagName('input')[0].value);
+  // clearChildren(GRID_DIV);
+  // createGrid(rows);
+  // createButtons();
 }
+
+window.onload = gameSetup();
