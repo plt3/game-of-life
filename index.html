@@ -12,7 +12,7 @@
         <div class="buttonContainer">
           <h1 id="title">Conway's Game of Life</h1>
           <div class="playGame">
-            <button type="button" name="startGame" onclick="IDKPAULFIXTHISSSSSSSSSSANDTHEOTHERBUTTON'SFUNCTIONTOO()">Start game!</button>
+            <button type="button" id="startGame" onclick="startGame()">Start game!</button>
           </div>
           <div class="settings">
             <h2>Settings:</h2>
@@ -32,7 +32,10 @@
               </select>
             </div>
             <br>
-            <button type="submit" onclick="gameSetup()">Submit</button>
+            <div class="settingButtons">
+              <button type="button" name="clear" onclick="clearGrid()">Clear grid</button>
+              <button type="submit" onclick="gameSetup()">Submit changes</button>
+            </div>
           </div>
         </div>
       </div>
