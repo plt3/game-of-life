@@ -8,6 +8,7 @@ const SETTINGS_DIV = document.getElementsByClassName('settings')[0];
 const TITLE_ELEM = document.getElementById('title');
 const EMPTY_BACKGROUND = 'white';
 const FULL_BACKGROUND = 'black';
+const HOW_TO_PLAY = 'Click on any boxes in the grid to make a starting pattern, then click "Start game!"';
 let amountCycles = 0;
 let gameLoop;
 let running = false;
@@ -90,7 +91,7 @@ function changeButtons() {
     stopButton.onclick = stopGame;
     running = true;
   } else {
-    instructions.innerHTML = 'Click on any boxes in the grid to make a starting pattern, then click "Start game!"';
+    instructions.innerHTML = HOW_TO_PLAY;
     stopButton.innerHTML = 'Start game!';
     stopButton.onclick = startGame;
     running = false;
@@ -185,20 +186,17 @@ function changeGrid() {
   createGrid(event.target.value, false);
 }
 
+function changeTheme() {
+  document.body.style.backgroundColor = event.target.value;
+}
+
 function gameSetup() {
   createGrid();
   BUTTON_OUTER_DIV.style.width = TITLE_ELEM.offsetWidth + 'px';
   const instructionsElem = document.createElement('h3');
-  instructionsElem.innerHTML = 'Click on any boxes in the grid to make a starting pattern, then click "Start game!"';
+  instructionsElem.innerHTML = HOW_TO_PLAY;
   PLAY_DIV.insertBefore(instructionsElem, PLAY_DIV.firstChild);
   fixButtonPadding();
-  // const toPad = RIGHT_DIV.offsetHeight - TITLE_ELEM.offsetHeight - PLAY_DIV.offsetHeight - settingsDiv.offsetHeight - 3 * 29;
-  // PLAY_DIV.style.paddingTop = Math.floor(toPad / 2) + 'px';
-  // PLAY_DIV.style.paddingBottom = Math.floor(toPad / 2) + 'px';
-  // const rows = parseInt(document.getElementsByTagName('input')[0].value);
-  // clearChildren(GRID_DIV);
-  // createGrid(rows);
-  // createButtons();
 }
 
 window.onload = gameSetup();
