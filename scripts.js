@@ -1,14 +1,18 @@
 const WINDOW_DIM = Math.floor(window.innerHeight * .97);
-let CYCLE_INTERVAL = 100;
 const GRID_DIV = document.getElementsByClassName('gridContainer')[0];
 const RIGHT_DIV = document.getElementsByClassName('rightContainer')[0];
 const BUTTON_OUTER_DIV = document.getElementsByClassName('buttonContainer')[0];
 const PLAY_DIV = document.getElementsByClassName('playGame')[0];
+const RANDOM_BUTTON = document.getElementById('random');
 const SETTINGS_DIV = document.getElementsByClassName('settings')[0];
+const SETTING_CHOICES = document.getElementsByClassName('settingChoices')[0];
 const TITLE_ELEM = document.getElementById('title');
 const EMPTY_BACKGROUND = 'white';
 const FULL_BACKGROUND = 'black';
-const HOW_TO_PLAY = 'Click on any boxes in the grid to make a starting pattern, then click "Start game!"';
+const HOW_TO_PLAY = 'Make a starting pattern by clicking cells in the grid or clicking "Random fill", then click "Start game!"';
+const WEIRD_PADDING = 29;
+
+let cycleInterval = 100;
 let amountCycles = 0;
 let gameLoop;
 let running = false;
@@ -76,12 +80,13 @@ function clearGrid() {
 
 function fixButtonPadding() {
   PLAY_DIV.style.padding = '0px';  // reset padding to calculate how much to pad again
-  const toPad = RIGHT_DIV.offsetHeight - TITLE_ELEM.offsetHeight - PLAY_DIV.offsetHeight - SETTINGS_DIV.offsetHeight - 3 * 29;
+  const toPad = RIGHT_DIV.offsetHeight - TITLE_ELEM.offsetHeight - PLAY_DIV.offsetHeight - SETTINGS_DIV.offsetHeight - 3 * WEIRD_PADDING;
   PLAY_DIV.style.paddingTop = Math.floor(toPad / 2) + 'px';
   PLAY_DIV.style.paddingBottom = Math.floor(toPad / 2) + 'px';
 }
 
 function changeButtons() {
+  // change instructions and buttons depending on if simulation is running or not
   const instructions = PLAY_DIV.childNodes[0];
   const stopButton = document.getElementById('startGame');
 
@@ -96,10 +101,12 @@ function changeButtons() {
     stopButton.onclick = startGame;
     running = false;
   }
+  disableButtons();
   fixButtonPadding();
 }
 
 function getNeighborNodes(node) {
+  // find how many live cells around current cell
   const nodeId = node.id.split(',');
   const nodeRow = parseInt(nodeId[0]);
   const nodeCol = parseInt(nodeId[1]);
@@ -117,11 +124,11 @@ function getNeighborNodes(node) {
       }
     }
   }
-
   return liveNeighbors;
 }
 
 function runGame(table) {
+  // run one cycle of the game, killing and generating appropriate cells
   const nodesToChange = [];
 
   for (let row of table.childNodes) {
@@ -147,9 +154,9 @@ function runGame(table) {
 }
 
 function stopGame() {
+  // when no more changes occur or user stops game
   clearInterval(gameLoop);
   changeButtons();
-  disableButtons();
   if (amountCycles !== 1) {
     alert(`Your pattern made it through ${amountCycles} cycles!`);
   } else {
@@ -158,9 +165,15 @@ function stopGame() {
 }
 
 function disableButtons() {
-  const settingChoices = document.getElementsByClassName('settingChoices')[0];
-  for (node of settingChoices.childNodes) {
-    if (node.tagName === 'INPUT' || node.tagName === 'SELECT') {
+  // disable all buttons except for Stop game when simulation is running
+  if (running) {
+    RANDOM_BUTTON.disabled = 'readonly';
+  } else {
+    RANDOM_BUTTON.disabled = '';
+  }
+
+  for (node of SETTING_CHOICES.childNodes) {
+    if (['INPUT', 'SELECT', 'BUTTON'].includes(node.tagName)) {
       if (running) {
         node.disabled = 'readonly';
       } else {
@@ -170,16 +183,27 @@ function disableButtons() {
   }
 }
 
+function randomFill() {
+  clearGrid();
+  const tableElem = document.getElementsByTagName('table')[0];
+  for (let row of tableElem.childNodes) {
+    for (let cell of row.childNodes) {
+      if (Math.random() < 0.5) {
+        cell.style.backgroundColor = FULL_BACKGROUND;
+      }
+    }
+  }
+}
+
 function startGame() {
   amountCycles = 0;
   changeButtons();
-  disableButtons();
   const tableElem = document.getElementsByTagName('table')[0];
-  gameLoop = setInterval(runGame, CYCLE_INTERVAL, tableElem);
+  gameLoop = setInterval(runGame, cycleInterval, tableElem);
 }
 
 function changeSpeed() {
-  CYCLE_INTERVAL = event.target.value * 1000;
+  cycleInterval = event.target.value * 1000;
 }
 
 function changeGrid() {
